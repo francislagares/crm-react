@@ -1,0 +1,20 @@
+{
+  "name": "crm-react",
+  "version": "1.0.0",
+  "description": "A CRM business product based on Node, Express, MongoDB, GraphQL & React.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "author": "Francis Lagares",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.17.0",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.10.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
