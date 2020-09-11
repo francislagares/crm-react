@@ -20,6 +20,23 @@ const resolvers = {
 
       return userId;
     },
+    getProducts: async () => {
+      try {
+        const products = await Product.find({});
+        return products;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    getProduct: async (_, { id }) => {
+      const product = await Product.findById(id);
+
+      if (!product) {
+        throw new Error('Product not found');
+      }
+
+      return product;
+    },
   },
   Mutation: {
     newUser: async (_, { input }) => {
