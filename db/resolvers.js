@@ -96,17 +96,31 @@ const resolvers = {
       }
     },
     updateProduct: async (_, { id, input }) => {
+      // Check if product exists
+      let product = await Product.findById(id);
+
+      if (!product) {
+        throw new Error('Product not found');
+      }
+      // Save product on DB
+      product = await Product.findOneAndUpdate({ _id: id }, input, {
+        new: true,
+      });
+
+      return product;
+    },
+    deleteProduct: async (_, { id }) => {
+      // Check if product exists
       let product = await Product.findById(id);
 
       if (!product) {
         throw new Error('Product not found');
       }
 
-      product = await Product.findOneAndUpdate({ _id: id }, input, {
-        new: true,
-      });
+      // Remove product from DB
+      product = await Product.findOneAndDelete({ _id: id });
 
-      return product;
+      return 'Product removed';
     },
   },
 };
