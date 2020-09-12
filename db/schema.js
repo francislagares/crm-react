@@ -65,6 +65,7 @@ const typeDefs = gql`
 
     # Clients
     getClients: [Client]
+    getClientsVendor: [Client]
 
     # Products
     getProducts: [Product]

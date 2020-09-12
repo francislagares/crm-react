@@ -56,6 +56,14 @@ const resolvers = {
         console.log(err);
       }
     },
+    getClientsVendor: async (_, {}, ctx) => {
+      try {
+        const clients = await Client.find({ vendor: ctx.user.id.toString() });
+        return clients;
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
   Mutation: {
     newUser: async (_, { input }) => {
