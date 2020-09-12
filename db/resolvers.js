@@ -181,6 +181,22 @@ const resolvers = {
         console.log(err);
       }
     },
+    updateClient: async (_, { id, input }, ctx) => {
+      // Check if client exists
+      let client = await Client.findById(id);
+
+      if (!client) {
+        throw new Error('Client does not exist');
+      }
+      // Check if vendor is authorized to edit
+      if (client.vendor.toString() !== ctx.user.id) {
+        throw new Error('You need valid credentials to edit clients');
+      }
+      // Save client to DB
+      client = await Client.findOneAndUpdate({ _id: id }, input, { new: true });
+
+      return client;
+    },
   },
 };
 
