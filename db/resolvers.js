@@ -197,6 +197,22 @@ const resolvers = {
 
       return client;
     },
+    deleteClient: async (_, { id }, ctx) => {
+      // Check if client exists
+      let client = await Client.findById(id);
+
+      if (!client) {
+        throw new Error('Client does not exist');
+      }
+      // Check if vendor is authorized to delete
+      if (client.vendor.toString() !== ctx.user.id) {
+        throw new Error('You need valid credentials to edit clients');
+      }
+      // Delete client from DB
+      await Client.findOneAndDelete({ _id: id });
+
+      return 'Client deleted';
+    },
   },
 };
 
