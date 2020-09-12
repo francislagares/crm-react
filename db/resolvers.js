@@ -56,6 +56,18 @@ const resolvers = {
         console.log(err);
       }
     },
+    getClient: async (_, { id }, ctx) => {
+      // Check if client exists
+      const client = await Client.findById(id);
+      if (!client) {
+        throw new Error('Client not found');
+      }
+      // Only vendors can see their own clients
+      if (client.vendor.toString() !== ctx.user.id) {
+        throw new Error('You need valid credentials');
+      }
+      return client;
+    },
     getClientsVendor: async (_, {}, ctx) => {
       try {
         const clients = await Client.find({ vendor: ctx.user.id.toString() });
