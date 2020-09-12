@@ -16,6 +16,15 @@ const createToken = (user, secret, expiresIn) => {
 // Resolvers
 const resolvers = {
   Query: {
+    getUsers: async () => {
+      try {
+        const users = await User.find({});
+
+        return users;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     getUser: async (_, { token }) => {
       const userId = await jwt.verify(token, process.env.JWT_SECRET);
 
@@ -37,6 +46,15 @@ const resolvers = {
       }
 
       return product;
+    },
+    getClients: async () => {
+      try {
+        const clients = await Client.find({});
+
+        return clients;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   Mutation: {
