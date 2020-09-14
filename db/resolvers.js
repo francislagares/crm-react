@@ -56,6 +56,14 @@ const resolvers = {
         console.log(err);
       }
     },
+    getOrdersByVendor: async (_, {}, ctx) => {
+      try {
+        const orders = await Order.find({ vendor: ctx.user.id });
+        return orders;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     getClients: async () => {
       try {
         const clients = await Client.find({});
