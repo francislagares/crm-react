@@ -73,6 +73,24 @@ const typeDefs = gql`
     quantity: Int
   }
 
+  input OrderProductInput {
+    id: ID
+    quantity: Int
+  }
+
+  input OrderInput {
+    order: [OrderProductInput]
+    total: Float!
+    client: ID!
+    status: OrderStatus
+  }
+
+  enum OrderStatus {
+    Pending
+    Fulfilled
+    Cancelled
+  }
+
   type Query {
     # Users
     getUsers: [User]
@@ -105,6 +123,9 @@ const typeDefs = gql`
     newClient(input: ClientInput): Client
     updateClient(id: ID!, input: ClientInput): Client
     deleteClient(id: ID!): String
+
+    # Orders
+    newOrder(input: OrderInput): Order
   }
 `;
 

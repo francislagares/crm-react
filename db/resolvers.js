@@ -222,6 +222,44 @@ const resolvers = {
 
       return 'Client deleted';
     },
+    newOrder: async (_, { input }, ctx) => {
+      const { client } = input;
+      // Check if client exists
+      let clientExist = await Client.findById(client);
+
+      if (!clientExist) {
+        throw new Error('Client does not exist');
+      }
+      // Check if client belongs to vendor
+      if (clientExist.vendor.toString() !== ctx.user.id) {
+        throw new Error('You need valid credentials');
+      }
+      // Check if stocks are available
+      for await (const item of input.order) {
+        const { id } = item;
+
+        const product = await Product.findById(id);
+
+        if (item.quantity > product.stock) {
+          throw new Error(`Item: ${product.name} exceeds available quantity`);
+        } else {
+          // Substract quantity from product stock
+          product.stock = product.stock - item.quantity;
+
+          await product.save();
+        }
+      }
+
+      // Create new order
+      const newOrder = await new Order(input);
+
+      // Assign a vendor
+      newOrder.vendor = ctx.user.id;
+
+      // Save order into DB
+      const result = await newOrder.save();
+      return result;
+    },
   },
 };
 
