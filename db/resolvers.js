@@ -64,6 +64,18 @@ const resolvers = {
         console.log(err);
       }
     },
+    getOrderById: async (_, { id }, ctx) => {
+      // Check if order exists
+      const order = await Order.findById(id);
+      if (!order) {
+        throw new Error('Order not found');
+      }
+      // Only vendors can see their own orders
+      if (order.vendor.toString() !== ctx.user.id) {
+        throw new Error('You need valid credentials');
+      }
+      return order;
+    },
     getClients: async () => {
       try {
         const clients = await Client.find({});
