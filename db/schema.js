@@ -58,6 +58,21 @@ const typeDefs = gql`
     phone: String
   }
 
+  type Order {
+    id: ID
+    order: [OrderGroup]
+    total: Float
+    client: ID
+    vendor: ID
+    date: String
+    status: OrderStatus
+  }
+
+  type OrderGroup {
+    id: ID
+    quantity: Int
+  }
+
   type Query {
     # Users
     getUsers: [User]
@@ -71,6 +86,9 @@ const typeDefs = gql`
     # Products
     getProducts: [Product]
     getProduct(id: ID!): Product
+
+    # Orders
+    getOrders: [Order]
   }
 
   type Mutation {

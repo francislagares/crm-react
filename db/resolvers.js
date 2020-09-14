@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Product = require('../models/Product');
 const Client = require('../models/Client');
+const Order = require('../models/Order');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -46,6 +47,14 @@ const resolvers = {
       }
 
       return product;
+    },
+    getOrders: async () => {
+      try {
+        const orders = Order.find({});
+        return orders;
+      } catch (err) {
+        console.log(err);
+      }
     },
     getClients: async () => {
       try {
