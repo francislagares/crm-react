@@ -280,6 +280,48 @@ const resolvers = {
       const result = await newOrder.save();
       return result;
     },
+    updateOrder: async (_, { id, input }, ctx) => {
+      const { client } = input;
+      // Check if order exists
+      const orderExist = await Order.findById(id);
+
+      if (!orderExist) {
+        throw new Error('Order does not exist');
+      }
+      // Check if client exist
+      const clientExist = await Client.findById(client);
+
+      if (!clientExist) {
+        throw new Error('Client does not exist');
+      }
+      // Check if client and order belong to vendor
+      if (clientExist.vendor.toString() !== ctx.user.id) {
+        throw new Error('You need valid credentials');
+      }
+      // Check stock
+      if (input.order) {
+        for await (const item of input.order) {
+          const { id } = item;
+
+          const product = await Product.findById(id);
+
+          if (item.quantity > product.stock) {
+            throw new Error(`Item: ${product.name} exceeds available quantity`);
+          } else {
+            // Substract quantity from product stock
+            product.stock = product.stock - item.quantity;
+
+            await product.save();
+          }
+        }
+      }
+      // Save order into DB
+      const result = await Order.findOneAndUpdate({ _id: id }, input, {
+        new: true,
+      });
+
+      return result;
+    },
   },
 };
 
