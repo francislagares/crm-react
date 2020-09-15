@@ -322,6 +322,24 @@ const resolvers = {
 
       return result;
     },
+    deleteOrder: async (_, { id }, ctx) => {
+      // Check if order exists
+      const orderExist = await Order.findById(id);
+
+      if (!orderExist) {
+        throw new Error('Order does not exists');
+      }
+
+      // Check if vendor is authorized to delete
+      if (orderExist.vendor.toString() !== ctx.user.id) {
+        throw new Error('You need valid credentials to delete orders');
+      }
+
+      // Delete order from DB
+      await Order.findOneAndDelete({ _id: id });
+
+      return 'Order Deleted';
+    },
   },
 };
 
