@@ -58,6 +58,11 @@ const typeDefs = gql`
     phone: String
   }
 
+  type TopClient {
+    total: Float
+    client: [Client]
+  }
+
   type Order {
     id: ID
     order: [OrderGroup]
@@ -110,6 +115,9 @@ const typeDefs = gql`
     getOrdersByVendor: [Order]
     getOrderById(id: ID!): Order
     getOrderByStatus(status: String!): [Order]
+
+    # Advanced Queries
+    bestClients: [TopClient]
   }
 
   type Mutation {

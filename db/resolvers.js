@@ -110,6 +110,32 @@ const resolvers = {
         console.log(err);
       }
     },
+    bestClients: async () => {
+      const clients = await Order.aggregate([
+        { $match: { status: 'Fulfilled' } },
+        {
+          $group: {
+            _id: '$client',
+            total: { $sum: '$total' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'clients',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'client',
+          },
+        },
+        {
+          $limit: 10,
+        },
+        {
+          $sort: { total: -1 },
+        },
+      ]);
+      return clients;
+    },
   },
   Mutation: {
     newUser: async (_, { input }) => {
