@@ -136,6 +136,32 @@ const resolvers = {
       ]);
       return clients;
     },
+    bestVendor: async () => {
+      const vendors = await Order.aggregate([
+        { $match: { status: 'Fulfilled' } },
+        {
+          $group: {
+            _id: '$vendor',
+            total: { $sum: '$total' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'vendor',
+          },
+        },
+        {
+          $limit: 3,
+        },
+        {
+          $sort: { total: -1 },
+        },
+      ]);
+      return vendors;
+    },
   },
   Mutation: {
     newUser: async (_, { input }) => {

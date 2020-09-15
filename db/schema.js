@@ -63,6 +63,11 @@ const typeDefs = gql`
     client: [Client]
   }
 
+  type TopVendor {
+    total: Float
+    vendor: [User]
+  }
+
   type Order {
     id: ID
     order: [OrderGroup]
@@ -118,6 +123,7 @@ const typeDefs = gql`
 
     # Advanced Queries
     bestClients: [TopClient]
+    bestVendor: [TopVendor]
   }
 
   type Mutation {
