@@ -76,6 +76,11 @@ const resolvers = {
       }
       return order;
     },
+    getOrderByStatus: async (_, { status }, ctx) => {
+      const order = await Order.find({ vendor: ctx.user.id, status });
+
+      return order;
+    },
     getClients: async () => {
       try {
         const clients = await Client.find({});
