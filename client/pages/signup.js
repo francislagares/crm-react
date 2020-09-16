@@ -1,7 +1,32 @@
 import React from 'react';
 import Layout from '../components/Layout';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const Signup = () => {
+  // Form validation
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      lastName: '',
+      email: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('Your name is required'),
+      lastName: Yup.string().required('Your last name is required'),
+      email: Yup.string()
+        .email('Email not valid')
+        .required('Email is required'),
+      password: Yup.string()
+        .required('You need to provide a password')
+        .min(6, 'Password must include at least 6 characters'),
+    }),
+    onSubmit: (values) => {
+      console.log('Sending...', values);
+    },
+  });
+
   return (
     <>
       <Layout>
@@ -11,7 +36,10 @@ const Signup = () => {
 
         <div className='flex justify-center mt-5'>
           <div className='w-full max-w-sm'>
-            <form className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'>
+            <form
+              className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'
+              onSubmit={formik.handleSubmit}
+            >
               <div className='mb-4'>
                 <label
                   className='block text-gray-700 text-sm font-bold mb-2'
@@ -24,8 +52,19 @@ const Signup = () => {
                   id='name'
                   type='text'
                   placeholder='User Name'
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+
+              {formik.touched.name && formik.errors.name ? (
+                <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+                  <p className='font-bold'>Error</p>
+                  <p>{formik.errors.name}</p>
+                </div>
+              ) : null}
+
               <div className='mb-4'>
                 <label
                   className='block text-gray-700 text-sm font-bold mb-2'
@@ -38,8 +77,19 @@ const Signup = () => {
                   id='lastName'
                   type='text'
                   placeholder='Last Name'
+                  value={formik.values.lastName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+
+              {formik.touched.lastName && formik.errors.lastName ? (
+                <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+                  <p className='font-bold'>Error</p>
+                  <p>{formik.errors.lastName}</p>
+                </div>
+              ) : null}
+
               <div className='mb-4'>
                 <label
                   className='block text-gray-700 text-sm font-bold mb-2'
@@ -52,8 +102,19 @@ const Signup = () => {
                   id='email'
                   type='email'
                   placeholder='User Email'
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+
+              {formik.touched.email && formik.errors.email ? (
+                <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+                  <p className='font-bold'>Error</p>
+                  <p>{formik.errors.email}</p>
+                </div>
+              ) : null}
+
               <div className='mb-4'>
                 <label
                   className='block text-gray-700 text-sm font-bold mb-2'
@@ -66,8 +127,19 @@ const Signup = () => {
                   id='password'
                   type='password'
                   placeholder='User Password'
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+
+              {formik.touched.password && formik.errors.password ? (
+                <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+                  <p className='font-bold'>Error</p>
+                  <p>{formik.errors.password}</p>
+                </div>
+              ) : null}
+
               <input
                 type='submit'
                 className='bg-gray-800 w-full mt-5 p-2 text-white uppercase hover:bg-gray-900'
