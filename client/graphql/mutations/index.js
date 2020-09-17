@@ -10,3 +10,11 @@ export const mutationNewUser = gql`
     }
   }
 `;
+
+export const mutationAuthUser = gql`
+  mutation authenticateUser($input: TokenInput) {
+    authenticateUser(input: $input) {
+      token
+    }
+  }
+`;
