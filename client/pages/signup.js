@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/Layout';
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { mutationNewUser } from '../graphql/mutations';
+import { useMutation } from '@apollo/client';
 
 const Signup = () => {
+  // State to handle backend messages
+  const [message, setMessage] = useState(null);
+
+  // Mutation to create new user
+  const [newUser] = useMutation(mutationNewUser);
+
+  // Use Router
+  const router = useRouter();
+
   // Form validation
   const formik = useFormik({
     initialValues: {
@@ -22,14 +34,52 @@ const Signup = () => {
         .required('You need to provide a password')
         .min(6, 'Password must include at least 6 characters'),
     }),
-    onSubmit: (values) => {
-      console.log('Sending...', values);
+    onSubmit: async (values) => {
+      // Extract variables from values
+      const { name, lastName, email, password } = values;
+
+      try {
+        const { data } = await newUser({
+          variables: {
+            input: {
+              name,
+              lastName,
+              email,
+              password,
+            },
+          },
+        });
+        // User created successfully
+        setMessage(`User ${data.newUser.name} has been created!`);
+
+        setTimeout(() => {
+          setMessage(null);
+          // Redirect to login page
+          router.push('/login');
+        }, 3000);
+      } catch (err) {
+        setMessage(err.message.replace('GraphQL Error:', ''));
+
+        setTimeout(() => {
+          setMessage(null);
+        }, 3000);
+      }
     },
   });
+
+  const showMessage = () => {
+    return (
+      <div className='bg-white py-2 px-3 w-full my-3 max-w-sm text-gray-700 font-bold text-center mx-auto'>
+        {message}
+      </div>
+    );
+  };
 
   return (
     <>
       <Layout>
+        {message && showMessage()}
+
         <h1 className='text-center text-2xl text-white font-light'>
           Create Account
         </h1>
