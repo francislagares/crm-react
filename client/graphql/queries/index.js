@@ -11,3 +11,13 @@ export const queryGetClientsVendor = gql`
     }
   }
 `;
+
+export const queryGetUser = gql`
+  query getUser {
+    getUser {
+      id
+      name
+      lastName
+    }
+  }
+`;

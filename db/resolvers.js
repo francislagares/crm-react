@@ -11,7 +11,7 @@ dotenv.config({ path: 'config.env' });
 const createToken = (user, secret, expiresIn) => {
   const { id, name, lastName, email } = user;
 
-  return jwt.sign({ id }, secret, { expiresIn });
+  return jwt.sign({ id, name, lastName, email }, secret, { expiresIn });
 };
 
 // Resolvers
@@ -26,10 +26,8 @@ const resolvers = {
         console.log(err);
       }
     },
-    getUser: async (_, { token }) => {
-      const userId = await jwt.verify(token, process.env.JWT_SECRET);
-
-      return userId;
+    getUser: async (_, {}, ctx) => {
+      return ctx.user;
     },
     getProducts: async () => {
       try {

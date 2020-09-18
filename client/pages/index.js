@@ -1,12 +1,12 @@
-import Head from 'next/head';
 import Layout from '../components/Layout';
+import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { queryGetClientsVendor } from '../graphql/queries';
 
 const Index = () => {
-  const { data, loading, error } = useQuery(queryGetClientsVendor);
+  const router = useRouter();
 
-  console.log(data, loading, error);
+  const { data, loading, error } = useQuery(queryGetClientsVendor);
 
   if (loading) return 'Loading...';
 
