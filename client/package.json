@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.0",
+    "apollo-link-context": "^1.0.20",
     "formik": "^2.1.5",
     "next": "9.5.3",
     "node-fetch": "^2.6.1",
