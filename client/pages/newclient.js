@@ -1,15 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
 import { mutationNewClient } from '../graphql/mutations';
+import { queryGetClientsVendor } from '../graphql/queries';
 import { useRouter } from 'next/router';
 
 const NewClient = () => {
   const router = useRouter();
 
-  const [newClient] = useMutation(mutationNewClient);
+  const [message, setMessage] = useState(null);
+
+  const [newClient] = useMutation(mutationNewClient, {
+    update(cache, { data: { newClient } }) {
+      // Get object we want to use from cache
+      const { getClientsVendor } = cache.readQuery({
+        query: queryGetClientsVendor,
+      });
+
+      // Rewrite cache
+      cache.writeQuery({
+        query: queryGetClientsVendor,
+        data: {
+          getClientsVendor: [...getClientsVendor, newClient],
+        },
+      });
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -43,16 +61,31 @@ const NewClient = () => {
           },
         });
 
+        setMessage('Client already exists');
+
         router.push('/');
       } catch (err) {
-        console.log(err);
+        setMessage(err.message.replace('GraphQL error: ', ''));
+
+        setTimeout(() => {
+          setMessage(null);
+        }, 2000);
       }
     },
   });
 
+  const showMessage = () => {
+    return (
+      <div className='bg-white py-2 px-3 w-full my-3 max-w-sm text-gray-700 font-bold text-center mx-auto'>
+        {message}
+      </div>
+    );
+  };
+
   return (
     <Layout>
       <h1 className='text-2xl text-gray-800 font-normal'>New Client</h1>
+      {message && showMessage()}
 
       <div className='flex justify-center mt-5'>
         <div className='w-full max-w-lg'>
