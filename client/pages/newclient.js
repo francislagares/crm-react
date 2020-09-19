@@ -2,8 +2,15 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useMutation } from '@apollo/client';
+import { mutationNewClient } from '../graphql/mutations';
+import { useRouter } from 'next/router';
 
 const NewClient = () => {
+  const router = useRouter();
+
+  const [newClient] = useMutation(mutationNewClient);
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -20,8 +27,26 @@ const NewClient = () => {
         .email('Email not valid')
         .required('You must provide a client email'),
     }),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const { name, lastName, company, email, phone } = values;
+
+      try {
+        const { data } = await newClient({
+          variables: {
+            input: {
+              name,
+              lastName,
+              company,
+              email,
+              phone,
+            },
+          },
+        });
+
+        router.push('/');
+      } catch (err) {
+        console.log(err);
+      }
     },
   });
 

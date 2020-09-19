@@ -18,3 +18,16 @@ export const mutationAuthUser = gql`
     }
   }
 `;
+
+export const mutationNewClient = gql`
+  mutation newClient($input: ClientInput) {
+    newClient(input: $input) {
+      id
+      name
+      lastName
+      company
+      email
+      phone
+    }
+  }
+`;
