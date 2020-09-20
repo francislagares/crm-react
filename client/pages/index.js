@@ -33,6 +33,7 @@ const Index = () => {
               <th className='w-1/5 py-2'>Name</th>
               <th className='w-1/5 py-2'>Company</th>
               <th className='w-1/5 py-2'>Email</th>
+              <th className='w-1/5 py-2'>Delete</th>
             </tr>
           </thead>
 
