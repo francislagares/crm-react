@@ -1,4 +1,5 @@
 import Layout from '../components/Layout';
+import Client from '../components/Client';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { queryGetClientsVendor } from '../graphql/queries';
@@ -37,13 +38,7 @@ const Index = () => {
 
           <tbody className='bg-white'>
             {data.getClientsVendor.map((client) => (
-              <tr key={client.id}>
-                <td className='border px-4 py-2'>
-                  {client.name} {client.lastName}
-                </td>
-                <td className='border px-4 py-2'>{client.company}</td>
-                <td className='border px-4 py-2'>{client.email}</td>
-              </tr>
+              <Client key={client.id} client={client} />
             ))}
           </tbody>
         </table>
