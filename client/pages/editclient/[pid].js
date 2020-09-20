@@ -1,10 +1,12 @@
 import React from 'react';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { queryGetClient } from '../../graphql/queries';
+import { mutationUpdateClient } from '../../graphql/mutations';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Swal from 'sweetalert2';
 
 const EditClient = () => {
   // Get current ID
@@ -20,6 +22,9 @@ const EditClient = () => {
     },
   });
 
+  // Mutation to update client
+  const [updateClient] = useMutation(mutationUpdateClient);
+
   // Validation Schema
   const schemaValidation = Yup.object({
     name: Yup.string().required('You must provide a client name'),
@@ -34,6 +39,33 @@ const EditClient = () => {
 
   const { getClient } = data;
 
+  // Function to update client on DB
+  const updateClientInfo = async (values) => {
+    // Extract variables from values
+    const { name, lastName, company, email, phone } = values;
+
+    try {
+      const { data } = updateClient({
+        variables: {
+          id,
+          input: {
+            name,
+            lastName,
+            company,
+            email,
+            phone,
+          },
+        },
+      });
+      // Sweet alert
+      Swal.fire('Updated!', 'Client successfully updated', 'success');
+      // Redirect to clients area
+      router.push('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Layout>
       <h1 className='text-2xl text-gray-800 font-normal'>Edit Client</h1>
@@ -44,8 +76,8 @@ const EditClient = () => {
             validationSchema={schemaValidation}
             enableReinitialize
             initialValues={getClient}
-            onSubmit={(val, fn) => {
-              console.log('Updating client');
+            onSubmit={(values) => {
+              updateClientInfo(values);
             }}
           >
             {(props) => {

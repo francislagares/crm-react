@@ -32,6 +32,16 @@ export const mutationNewClient = gql`
   }
 `;
 
+export const mutationUpdateClient = gql`
+  mutation updateClient($id: ID!, $input: ClientInput) {
+    updateClient(id: $id, input: $input) {
+      id
+      name
+      email
+    }
+  }
+`;
+
 export const mutationDeleteClient = gql`
   mutation deleteClient($id: ID!) {
     deleteClient(id: $id)
