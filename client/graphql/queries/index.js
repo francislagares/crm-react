@@ -12,6 +12,18 @@ export const queryGetClientsVendor = gql`
   }
 `;
 
+export const queryGetClient = gql`
+  query getClient($id: ID!) {
+    getClient(id: $id) {
+      name
+      lastName
+      company
+      email
+      phone
+    }
+  }
+`;
+
 export const queryGetUser = gql`
   query getUser {
     getUser {

@@ -1,6 +1,8 @@
 import React from 'react';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
+import { useQuery } from '@apollo/client';
+import { queryGetClient } from '../../graphql/queries';
 
 const EditClient = () => {
   // Get current ID
@@ -8,8 +10,17 @@ const EditClient = () => {
   const {
     query: { id },
   } = router;
-  console.log(id);
 
+  // Query to get client
+  const { data, loading, error } = useQuery(queryGetClient, {
+    variables: {
+      id,
+    },
+  });
+
+  if (loading) return 'Loading...';
+
+  console.log(data.getClient);
   return (
     <Layout>
       <h1 className='text-2xl text-gray-800 font-normal'>Edit Client</h1>
