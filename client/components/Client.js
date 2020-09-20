@@ -1,10 +1,56 @@
 import React from 'react';
+import Swal from 'sweetalert2';
+import { useMutation } from '@apollo/client';
+import { mutationDeleteClient } from '../graphql/mutations';
+import { queryGetClientsVendor } from '../graphql/queries';
 
 const Client = ({ client }) => {
+  // Extract variables from client
   const { id, name, lastName, company, email } = client;
 
-  const deleteClient = (id) => {
-    console.log('Deleting client...', id);
+  // Mutation to delete client
+  const [deleteClient] = useMutation(mutationDeleteClient, {
+    update(cache) {
+      // Get object we want to use from cache
+      const { getClientsVendor } = cache.readQuery({
+        query: queryGetClientsVendor,
+      });
+
+      cache.writeQuery({
+        query: queryGetClientsVendor,
+        data: {
+          getClientsVendor: getClientsVendor.filter(
+            (currentClient) => currentClient.id !== id
+          ),
+        },
+      });
+    },
+  });
+
+  const confirmDelete = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const { data } = await deleteClient({
+            variables: {
+              id,
+            },
+          });
+          console.log(data);
+          Swal.fire('Deleted!', data.deleteClient, 'success');
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
   };
 
   return (
@@ -18,11 +64,11 @@ const Client = ({ client }) => {
         <button
           type='button'
           className='flex justify-center items-center bg-red-800 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold'
-          onClick={() => deleteClient(id)}
+          onClick={() => confirmDelete(id)}
         >
           Delete
           <svg
-            class='w-4 h-4 ml-2'
+            className='w-4 h-4 ml-2'
             fill='none'
             stroke='currentColor'
             viewBox='0 0 24 24'
