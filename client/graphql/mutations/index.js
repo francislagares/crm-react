@@ -47,3 +47,9 @@ export const mutationDeleteClient = gql`
     deleteClient(id: $id)
   }
 `;
+
+export const mutationDeleteProduct = gql`
+  mutation deleteProduct($id: ID!) {
+    deleteProduct(id: $id)
+  }
+`;

@@ -1,8 +1,56 @@
 import React from 'react';
+import Swal from 'sweetalert2';
+import { useMutation } from '@apollo/client';
+import { mutationDeleteProduct } from '../graphql/mutations';
+import { queryGetProducts } from '../graphql/queries';
 
 const Product = ({ product }) => {
   // Extract variables from product
-  const { name, stock, price } = product;
+  const { id, name, stock, price } = product;
+  // Mutation to delete product
+  const [deleteProduct] = useMutation(mutationDeleteProduct, {
+    update(cache) {
+      // Get products from cache
+      const { getProducts } = cache.readQuery({
+        query: queryGetProducts,
+      });
+
+      cache.writeQuery({
+        query: queryGetProducts,
+        data: {
+          getProducts: getProducts.filter(
+            (currentProduct) => currentProduct.id !== id
+          ),
+        },
+      });
+    },
+  });
+
+  const confirmDelete = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const { data } = await deleteProduct({
+            variables: {
+              id,
+            },
+          });
+          console.log(data);
+          Swal.fire('Deleted!', data.deleteProduct, 'success');
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+  };
 
   return (
     <tr>
@@ -36,7 +84,7 @@ const Product = ({ product }) => {
         <button
           type='button'
           className='flex justify-center items-center bg-green-600 py-2 px-4 w-full text-white rounded text-xs uppercase font-bold'
-          onClick={() => editClient()}
+          onClick={() => editProduct()}
         >
           Edit
           <svg
