@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { useMutation } from '@apollo/client';
 import { mutationDeleteProduct } from '../graphql/mutations';
 import { queryGetProducts } from '../graphql/queries';
+import Router from 'next/router';
 
 const Product = ({ product }) => {
   // Extract variables from product
@@ -49,6 +50,13 @@ const Product = ({ product }) => {
           console.log(err);
         }
       }
+    });
+  };
+
+  const editProduct = () => {
+    Router.push({
+      pathname: '/editproduct/[id]',
+      query: { id },
     });
   };
 

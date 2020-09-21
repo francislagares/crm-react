@@ -44,3 +44,14 @@ export const queryGetProducts = gql`
     }
   }
 `;
+
+export const queryGetProduct = gql`
+  query getProduct($id: ID!) {
+    getProduct(id: $id) {
+      id
+      name
+      stock
+      price
+    }
+  }
+`;
