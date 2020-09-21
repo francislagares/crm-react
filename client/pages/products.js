@@ -1,12 +1,39 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
+import Product from '../components/Product';
+import { useQuery } from '@apollo/client';
+import { queryGetProducts } from '../graphql/queries';
 
-const Products = () => (
-  <div>
-    <Layout>
-      <h1 className='text-2xl text-gray-800 font-normal'>Products</h1>
-    </Layout>
-  </div>
-);
+const Products = () => {
+  const { data, loading, error } = useQuery(queryGetProducts);
+
+  if (loading) return 'Loading...';
+
+  return (
+    <div>
+      <Layout>
+        <h1 className='text-2xl text-gray-800 font-normal'>Products</h1>
+
+        <table className='table-auto shadow-md mt-10 w-full w-lg'>
+          <thead className='bg-gray-800'>
+            <tr className='text-white'>
+              <th className='w-1/5 py-2'>Name</th>
+              <th className='w-1/5 py-2'>Stock</th>
+              <th className='w-1/5 py-2'>Price</th>
+              <th className='w-1/5 py-2'>Delete</th>
+              <th className='w-1/5 py-2'>Edit</th>
+            </tr>
+          </thead>
+
+          <tbody className='bg-white'>
+            {data.getProducts.map((product) => (
+              <Product key={product.id} product={product} />
+            ))}
+          </tbody>
+        </table>
+      </Layout>
+    </div>
+  );
+};
 
 export default Products;

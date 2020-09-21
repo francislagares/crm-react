@@ -33,3 +33,14 @@ export const queryGetUser = gql`
     }
   }
 `;
+
+export const queryGetProducts = gql`
+  query getProducts {
+    getProducts {
+      id
+      name
+      stock
+      price
+    }
+  }
+`;
