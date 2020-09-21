@@ -2,8 +2,16 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useMutation } from '@apollo/client';
+import { mutationNewProduct } from '../graphql/mutations';
+import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 const NewProduct = () => {
+  const router = useRouter();
+
+  const [newProduct] = useMutation(mutationNewProduct);
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -21,7 +29,26 @@ const NewProduct = () => {
         .positive('Negative numbers are not allowed'),
     }),
     onSubmit: async (values) => {
-      console.log(values);
+      const { name, stock, price } = values;
+
+      try {
+        const { data } = await newProduct({
+          variables: {
+            input: {
+              name,
+              stock,
+              price,
+            },
+          },
+        });
+        // Show confirmation alert
+        Swal.fire('Product created', 'Product successfully created', 'success');
+        // Redirect to products
+        router.push('/products');
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
     },
   });
 
