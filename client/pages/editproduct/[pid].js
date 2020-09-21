@@ -1,10 +1,12 @@
 import React from 'react';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { queryGetProduct } from '../../graphql/queries';
+import { mutationUpdateProduct } from '../../graphql/mutations';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Swal from 'sweetalert2';
 
 const EditProduct = () => {
   // Get current ID
@@ -18,6 +20,9 @@ const EditProduct = () => {
       id,
     },
   });
+
+  // Mutation to update product
+  const [updateProduct] = useMutation(mutationUpdateProduct);
 
   // Validation Schema
   const schemaValidation = Yup.object({
@@ -33,11 +38,34 @@ const EditProduct = () => {
 
   if (loading) return 'Loading...';
 
+  if (!data) {
+    return 'Not allowed';
+  }
+
   const { getProduct } = data;
 
   // Function to update product on DB
   const updateProductInfo = async (values) => {
-    console.log(values);
+    // Extract variables from values
+    const { name, stock, price } = values;
+    try {
+      const { data } = await updateProduct({
+        variables: {
+          id,
+          input: {
+            name,
+            stock,
+            price,
+          },
+        },
+      });
+      // Sweet alert
+      Swal.fire('Updated!', 'Product successfully updated', 'success');
+      // Redirect to products area
+      router.push('/products');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
