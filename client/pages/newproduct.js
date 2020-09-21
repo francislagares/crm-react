@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
+import { queryGetProducts } from '../graphql/queries';
 import { mutationNewProduct } from '../graphql/mutations';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
@@ -10,7 +11,21 @@ import Swal from 'sweetalert2';
 const NewProduct = () => {
   const router = useRouter();
 
-  const [newProduct] = useMutation(mutationNewProduct);
+  const [newProduct] = useMutation(mutationNewProduct, {
+    update(cache, { data: { newProduct } }) {
+      // Read object from cache
+      const { getProducts } = cache.readQuery({
+        query: queryGetProducts,
+      });
+      // Rewrite cache
+      cache.writeQuery({
+        query: queryGetProducts,
+        data: {
+          getProducts: [...getProducts, newProduct],
+        },
+      });
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
