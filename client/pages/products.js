@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import Product from '../components/Product';
 import { useQuery } from '@apollo/client';
 import { queryGetProducts } from '../graphql/queries';
+import Link from 'next/link';
 
 const Products = () => {
   const { data, loading, error } = useQuery(queryGetProducts);
@@ -13,6 +14,11 @@ const Products = () => {
     <div>
       <Layout>
         <h1 className='text-2xl text-gray-800 font-normal'>Products</h1>
+        <Link href='/newproduct'>
+          <a className='bg-blue-800 py-2 px-5 mt-5 inline-block text-white rounded text-sm hover:bg-gray-800 mb-3 uppercase font-bold'>
+            New Product
+          </a>
+        </Link>
 
         <table className='table-auto shadow-md mt-10 w-full w-lg'>
           <thead className='bg-gray-800'>
