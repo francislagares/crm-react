@@ -7,6 +7,11 @@ const OrderReducer = (state, action) => {
         ...state,
         client: action.payload,
       };
+    case SELECT_PRODUCT:
+      return {
+        ...state,
+        products: action.payload,
+      };
     default:
       return state;
   }

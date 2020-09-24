@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Select from 'react-select';
 import { useQuery } from '@apollo/client';
 import { queryGetProducts } from '../../graphql/queries';
+import OrderContext from '../../context/orders/OrderContext';
 
 const AddProduct = () => {
   // Component local state
   const [products, setProducts] = useState([]);
 
+  // Order Context
+  const orderContext = useContext(OrderContext);
+  const { addProduct } = orderContext;
+
   // Get data from DB
   const { data, loading, error } = useQuery(queryGetProducts);
 
   useEffect(() => {
-    console.log(products);
+    addProduct(products);
   }, [products]);
 
   const selectProduct = (product) => {
