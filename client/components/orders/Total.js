@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import OrderContext from '../../context/orders/OrderContext';
 
 const Total = () => {
-  const total = 2000;
+  // Order context
+  const orderContext = useContext(OrderContext);
+  const { total } = orderContext;
 
   return (
     <div className='flex items-center mt-5 justify-between bg-white p-3'>

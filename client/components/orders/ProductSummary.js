@@ -6,13 +6,14 @@ const ProductSummary = ({ product }) => {
 
   // Order context
   const orderContext = useContext(OrderContext);
-  const { productQuantity } = orderContext;
+  const { productQuantity, updateTotal } = orderContext;
 
   // Set local state
   const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
     updateQuantity();
+    updateTotal();
   }, [quantity]);
 
   const updateQuantity = () => {

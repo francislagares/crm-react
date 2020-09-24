@@ -1,3 +1,4 @@
 export const SELECT_CLIENT = 'SELECT_CLIENT';
 export const SELECT_PRODUCT = 'SELECT_PRODUCT';
 export const SELECT_QUANTITY = 'SELECT_QUANTITY';
+export const UPDATE_TOTAL = 'UPDATE_TOTAL';

@@ -1,4 +1,9 @@
-import { SELECT_CLIENT, SELECT_PRODUCT, SELECT_QUANTITY } from '../../types';
+import {
+  SELECT_CLIENT,
+  SELECT_PRODUCT,
+  SELECT_QUANTITY,
+  UPDATE_TOTAL,
+} from '../../types';
 
 const OrderReducer = (state, action) => {
   switch (action.type) {
@@ -19,6 +24,14 @@ const OrderReducer = (state, action) => {
           product.id === action.payload.id
             ? (product = action.payload)
             : product
+        ),
+      };
+    case UPDATE_TOTAL:
+      return {
+        ...state,
+        total: state.products.reduce(
+          (newTotal, product) => (newTotal += product.price * product.quantity),
+          0
         ),
       };
     default:
