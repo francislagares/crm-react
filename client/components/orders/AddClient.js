@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Select from 'react-select';
 import { useQuery } from '@apollo/client';
 import { queryGetClientsVendor } from '../../graphql/queries';
+import OrderContext from '../../context/orders/OrderContext';
 
 const AddClient = () => {
   const [client, setClient] = useState([]);
 
+  // Order context
+  const orderContext = useContext(OrderContext);
+  const { addClient } = orderContext;
+
+  // Gets data from DB
   const { data, loading, error } = useQuery(queryGetClientsVendor);
-  console.log(data, loading, error);
 
   if (loading) return null;
 
   const { getClientsVendor } = data;
 
   useEffect(() => {
-    console.log(client);
+    addClient(client);
   }, [client]);
 
   const selectClient = (client) => {
@@ -29,9 +34,9 @@ const AddClient = () => {
       <Select
         className='mt-3'
         options={getClientsVendor}
-        onChange={(option) => selectClient(option)}
-        getOptionValue={(options) => options.id}
-        getOptionLabel={(options) => options.name}
+        onChange={(client) => selectClient(client)}
+        getOptionValue={(client) => client.id}
+        getOptionLabel={(client) => client.name}
         placeholder='Select client'
         noOptionMessage={() => 'No results'}
       />

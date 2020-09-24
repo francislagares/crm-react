@@ -14,8 +14,16 @@ const OrderState = ({ children }) => {
 
   const [state, dispatch] = useReducer(OrderReducer, initialState);
 
+  // Modifies client
+  const addClient = (client) => {
+    dispatch({
+      type: SELECT_CLIENT,
+      payload: client,
+    });
+  };
+
   return (
-    <OrderContext.Provider value={{ initialState }}>
+    <OrderContext.Provider value={{ addClient }}>
       {children}
     </OrderContext.Provider>
   );
