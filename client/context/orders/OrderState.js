@@ -23,16 +23,42 @@ const OrderState = ({ children }) => {
   };
 
   // Modifies product
-  const addProduct = (products) => {
+  const addProduct = (selectedProducts) => {
+    let newState;
+    if (state.products.length > 0) {
+      // Make a copy from second array to assign it to the first array
+      newState = selectedProducts.map((product) => {
+        const newObject = state.products.find(
+          (productState) => productState.id === product.id
+        );
+        return { ...product, ...newObject };
+      });
+    } else {
+      newState = selectedProducts;
+    }
+
     dispatch({
       type: SELECT_PRODUCT,
       payload: products,
     });
   };
 
+  // Modifies product quantity
+  const productQuantity = (newProduct) => {
+    dispatch({
+      type: SELECT_QUANTITY,
+      payload: newProduct,
+    });
+  };
+
   return (
     <OrderContext.Provider
-      value={{ products: state.products, addClient, addProduct }}
+      value={{
+        products: state.products,
+        addClient,
+        addProduct,
+        productQuantity,
+      }}
     >
       {children}
     </OrderContext.Provider>
