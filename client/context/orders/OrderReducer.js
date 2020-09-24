@@ -1,6 +1,6 @@
 import { SELECT_CLIENT, SELECT_PRODUCT, SELECT_QUANTITY } from '../../types';
 
-export default (state, action) => {
+const OrderReducer = (state, action) => {
   switch (action.type) {
     case SELECT_CLIENT:
       return {
@@ -11,3 +11,5 @@ export default (state, action) => {
       return state;
   }
 };
+
+export default OrderReducer;

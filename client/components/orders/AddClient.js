@@ -37,7 +37,7 @@ const AddClient = () => {
         onChange={(client) => selectClient(client)}
         getOptionValue={(client) => client.id}
         getOptionLabel={(client) => client.name}
-        placeholder='Select client'
+        placeholder='Select Client'
         noOptionMessage={() => 'No results'}
       />
     </>
