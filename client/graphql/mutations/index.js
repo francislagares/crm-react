@@ -83,3 +83,12 @@ export const mutationNewOrder = gql`
     }
   }
 `;
+
+export const mutationUpdateOrder = gql`
+  mutation updateOrder($id: ID!, $input: OrderInput) {
+    updateOrder(id: $id, input: $input) {
+      id
+      status
+    }
+  }
+`;

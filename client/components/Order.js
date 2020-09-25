@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useMutation } from '@apollo/client';
+import { mutationUpdateOrder } from '../graphql/mutations';
 
 const Order = ({ order }) => {
   // Extract variables from object
@@ -7,7 +9,11 @@ const Order = ({ order }) => {
     client: { name, lastName, email, phone },
     total,
     status,
+    client,
   } = order;
+
+  // Mutation to update order status
+  const [updateOrder] = useMutation(mutationUpdateOrder);
 
   // Create local state for order status
   const [statusOrder, setStatusOrder] = useState(status);
@@ -29,6 +35,25 @@ const Order = ({ order }) => {
       setClassState('border-green-500');
     } else {
       setClassState('border-red-800');
+    }
+  };
+
+  const updateOrderStatus = async (newStatus) => {
+    console.log(newStatus);
+    try {
+      const { data } = await updateOrder({
+        variables: {
+          id,
+          input: {
+            status: newStatus,
+            client: client.id,
+          },
+        },
+      });
+
+      setStatusOrder(data.updateOrder.status);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -82,7 +107,7 @@ const Order = ({ order }) => {
         <select
           className='mt-2 appearance-none bg-blue-600 border border-blue-600 text-white p-2 text-center rounded leading-tight focus:outline-none focus:bg-blue-600 focus:border-blue-500 uppercase text-xs'
           value={statusOrder}
-          // onChange={(e) => setStatusOrder(e.target.value)}
+          onChange={(e) => updateOrderStatus(e.target.value)}
         >
           <option value='Fulfilled'>Fulfilled</option>
           <option value='Pending'>Pending</option>

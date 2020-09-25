@@ -7,7 +7,6 @@ import { queryGetOrdersByVendor } from '../graphql/queries';
 const Orders = () => {
   const { data, loading, error } = useQuery(queryGetOrdersByVendor);
 
-  console.log(data, loading, error);
   if (loading) return 'Loading...';
 
   return (
