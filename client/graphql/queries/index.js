@@ -62,9 +62,16 @@ export const queryGetOrdersByVendor = gql`
       id
       order {
         id
+        name
         quantity
       }
-      client
+      client {
+        id
+        name
+        lastName
+        email
+        phone
+      }
       vendor
       total
       status

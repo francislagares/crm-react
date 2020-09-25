@@ -56,7 +56,9 @@ const resolvers = {
     },
     getOrdersByVendor: async (_, {}, ctx) => {
       try {
-        const orders = await Order.find({ vendor: ctx.user.id });
+        const orders = await Order.find({ vendor: ctx.user.id }).populate(
+          'client'
+        );
         return orders;
       } catch (err) {
         console.log(err);
