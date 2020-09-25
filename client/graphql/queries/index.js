@@ -55,3 +55,19 @@ export const queryGetProduct = gql`
     }
   }
 `;
+
+export const queryGetOrdersByVendor = gql`
+  query getOrdersByVendor {
+    getOrdersByVendor {
+      id
+      order {
+        id
+        quantity
+      }
+      client
+      vendor
+      total
+      status
+    }
+  }
+`;
