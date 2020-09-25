@@ -75,3 +75,11 @@ export const mutationDeleteProduct = gql`
     deleteProduct(id: $id)
   }
 `;
+
+export const mutationNewOrder = gql`
+  mutation newOrder($input: OrderInput) {
+    newOrder(input: $input) {
+      id
+    }
+  }
+`;

@@ -81,11 +81,15 @@ const typeDefs = gql`
   type OrderGroup {
     id: ID
     quantity: Int
+    name: String
+    price: Float
   }
 
   input OrderProductInput {
     id: ID
     quantity: Int
+    name: String
+    price: Float
   }
 
   input OrderInput {
