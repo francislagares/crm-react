@@ -8,18 +8,34 @@ const Order = ({ order }) => {
     total,
     status,
   } = order;
-  console.log(order);
+
   // Create local state for order status
   const [statusOrder, setStatusOrder] = useState(status);
+  const [classState, setClassState] = useState('');
+
   // Update when order status changes
   useEffect(() => {
     if (statusOrder) {
       setStatusOrder(statusOrder);
     }
+    classOrder();
   }, [statusOrder]);
 
+  // Function that changes order className by status
+  const classOrder = () => {
+    if (statusOrder === 'Pending') {
+      setClassState('border-yellow-500');
+    } else if (statusOrder === 'Fulfilled') {
+      setClassState('border-green-500');
+    } else {
+      setClassState('border-red-800');
+    }
+  };
+
   return (
-    <div className='mt-4 bg-white rounded p-6 md:grid md:grid-cols-2 md:gap-4 shadow-lg'>
+    <div
+      className={`${classState} border-t-4 mt-4 bg-white rounded p-6 md:grid md:grid-cols-2 md:gap-4 shadow-lg`}
+    >
       <div>
         <p className='font-bold text-gray-800'>
           Client: {name} {lastName}
