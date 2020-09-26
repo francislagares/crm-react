@@ -34,6 +34,21 @@ const Sidebar = () => {
           </Link>
         </li>
       </nav>
+
+      <div className='sm:mt-10'>
+        <p className='text-white text-2xl font-black'>More Options</p>
+      </div>
+      <nav className='mt-5 list-none'>
+        <li
+          className={
+            router.pathname === '/topvendors' ? 'bg-blue-800 p-2' : 'p-2'
+          }
+        >
+          <Link href='/topvendors'>
+            <a className='text-white block'>Top Vendors</a>
+          </Link>
+        </li>
+      </nav>
     </aside>
   );
 };
