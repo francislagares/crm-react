@@ -78,3 +78,15 @@ export const queryGetOrdersByVendor = gql`
     }
   }
 `;
+
+export const queryBestVendor = gql`
+  query bestVendor {
+    bestVendor {
+      vendor {
+        name
+        email
+      }
+      total
+    }
+  }
+`;
