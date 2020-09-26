@@ -44,7 +44,6 @@ const Product = ({ product }) => {
               id,
             },
           });
-          console.log(data);
           Swal.fire('Deleted!', data.deleteProduct, 'success');
         } catch (err) {
           console.log(err);

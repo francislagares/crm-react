@@ -92,3 +92,9 @@ export const mutationUpdateOrder = gql`
     }
   }
 `;
+
+export const mutationDeleteOrder = gql`
+  mutation deleteOrder($id: ID!) {
+    deleteOrder(id: $id)
+  }
+`;

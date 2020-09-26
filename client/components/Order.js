@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { mutationUpdateOrder } from '../graphql/mutations';
+import { mutationDeleteOrder } from '../graphql/mutations';
+import Swal from 'sweetalert2';
 
 const Order = ({ order }) => {
   // Extract variables from object
@@ -14,6 +16,8 @@ const Order = ({ order }) => {
 
   // Mutation to update order status
   const [updateOrder] = useMutation(mutationUpdateOrder);
+  // Mutation to delete order
+  const [deleteOrder] = useMutation(mutationDeleteOrder);
 
   // Create local state for order status
   const [statusOrder, setStatusOrder] = useState(status);
@@ -55,6 +59,31 @@ const Order = ({ order }) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const confirmDelete = () => {
+    Swal.fire({
+      title: 'Are you sure to delete order?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.value) {
+        try {
+          const data = await deleteOrder({
+            variables: {
+              id,
+            },
+          });
+          Swal.fire('Deleted!', data.deleteOrder, 'success');
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
   };
 
   return (
@@ -126,7 +155,10 @@ const Order = ({ order }) => {
         <p className='text-gray-800 mt-3 font-bold'>
           Total Amount: <span className='font-light'>$ {total}</span>
         </p>
-        <button className='uppercase text-xs flex items-center mt-4 bg-red-800 px-5 py-2 inline-block text-white rounded leading-tight '>
+        <button
+          className='uppercase text-xs flex items-center mt-4 bg-red-800 px-5 py-2 inline-block text-white rounded leading-tight'
+          onClick={() => confirmDelete()}
+        >
           Delete Order
           <svg
             className='w-4 h-4 ml-2'
