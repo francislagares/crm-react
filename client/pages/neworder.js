@@ -7,6 +7,7 @@ import OrderSummary from '../components/orders/OrderSummary';
 import Total from '../components/orders/Total';
 import { useMutation } from '@apollo/client';
 import { mutationNewOrder } from '../graphql/mutations';
+import { queryGetOrdersByVendor } from '../graphql/queries';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
@@ -20,7 +21,20 @@ const NewOrder = () => {
   const { client, products, total } = orderContext;
 
   // Mutation to create new order
-  const [newOrder] = useMutation(mutationNewOrder);
+  const [newOrder] = useMutation(mutationNewOrder, {
+    update(cache, { data: { newOrder } }) {
+      const { getOrdersByVendor } = cache.readQuery({
+        query: queryGetOrdersByVendor,
+      });
+
+      cache.writeQuery({
+        query: queryGetOrdersByVendor,
+        data: {
+          getOrdersByVendor: [...getOrdersByVendor, newOrder],
+        },
+      });
+    },
+  });
 
   const validateOrder = () => {
     return !products.every((product) => product.quantity > 0) ||
