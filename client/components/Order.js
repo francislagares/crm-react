@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { mutationUpdateOrder } from '../graphql/mutations';
 import { mutationDeleteOrder } from '../graphql/mutations';
+import { queryGetOrdersByVendor } from '../graphql/queries';
 import Swal from 'sweetalert2';
 
 const Order = ({ order }) => {
@@ -17,7 +18,22 @@ const Order = ({ order }) => {
   // Mutation to update order status
   const [updateOrder] = useMutation(mutationUpdateOrder);
   // Mutation to delete order
-  const [deleteOrder] = useMutation(mutationDeleteOrder);
+  const [deleteOrder] = useMutation(mutationDeleteOrder, {
+    update(cache) {
+      const { getOrdersByVendor } = cache.readQuery({
+        query: queryGetOrdersByVendor,
+      });
+
+      cache.writeQuery({
+        query: queryGetOrdersByVendor,
+        data: {
+          getOrdersByVendor: getOrdersByVendor.filter(
+            (currentOrder) => currentOrder.id !== id
+          ),
+        },
+      });
+    },
+  });
 
   // Create local state for order status
   const [statusOrder, setStatusOrder] = useState(status);

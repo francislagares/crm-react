@@ -14,10 +14,6 @@ const AddClient = () => {
   // Gets data from DB
   const { data, loading, error } = useQuery(queryGetClientsVendor);
 
-  if (loading) return null;
-
-  const { getClientsVendor } = data;
-
   useEffect(() => {
     addClient(client);
   }, [client]);
@@ -25,6 +21,10 @@ const AddClient = () => {
   const selectClient = (client) => {
     setClient(client);
   };
+
+  if (loading) return null;
+
+  const { getClientsVendor } = data;
 
   return (
     <>
