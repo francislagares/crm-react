@@ -48,6 +48,15 @@ const Sidebar = () => {
             <a className='text-white block'>Top Vendors</a>
           </Link>
         </li>
+        <li
+          className={
+            router.pathname === '/topclients' ? 'bg-blue-800 p-2' : 'p-2'
+          }
+        >
+          <Link href='/topclients'>
+            <a className='text-white block'>Top Clients</a>
+          </Link>
+        </li>
       </nav>
     </aside>
   );

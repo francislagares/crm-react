@@ -90,3 +90,15 @@ export const queryBestVendor = gql`
     }
   }
 `;
+
+export const queryBestClients = gql`
+  query bestClients {
+    bestClients {
+      client {
+        name
+        email
+      }
+      total
+    }
+  }
+`;
