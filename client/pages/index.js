@@ -9,7 +9,6 @@ const Index = () => {
   const router = useRouter();
 
   const { data, loading, error } = useQuery(queryGetClientsVendor);
-  console.log(data, loading, error);
 
   if (loading) return 'Loading...';
 
@@ -47,6 +46,15 @@ const Index = () => {
       </Layout>
     </div>
   );
+};
+
+Index.getInitialProps = async (ctx) => {
+  if (ctx && ctx.req) {
+    ctx.res.writeHead(302, { Location: '/login' });
+    ctx.res.end();
+  } else {
+    return {};
+  }
 };
 
 export default Index;
