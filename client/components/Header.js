@@ -23,8 +23,8 @@ const Header = () => {
   };
 
   return (
-    <div className='flex justify-between mb-6'>
-      <p className='m-2'>Hello {name}</p>
+    <div className='sm:flex sm:justify-between mb-6'>
+      <p className='m-2 mb-5 lg:mb-0'>Hello {name}</p>
       <button
         onClick={() => signOut()}
         type='button'
